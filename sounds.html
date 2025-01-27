@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تحميل الأصوات</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2196F3;
+            text-align: center;
+        }
+        .download-item {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background: #1976D2;
+        }
+        .note {
+            margin-top: 20px;
+            padding: 10px;
+            background: #FFF3E0;
+            border-right: 4px solid #FF9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>تحميل الأصوات</h1>
+        
+        <div class="download-item">
+            <h3>1. صوت النقر العادي</h3>
+            <audio controls>
+                <source src="https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3" type="audio/mpeg">
+            </audio>
+            <br>
+            <a href="https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3" download="click.mp3" class="button">تحميل الصوت</a>
+        </div>
+
+        <div class="download-item">
+            <h3>2. صوت الوصول للهدف</h3>
+            <audio controls>
+                <source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg">
+            </audio>
+            <br>
+            <a href="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" download="success.mp3" class="button">تحميل الصوت</a>
+        </div>
+
+        <div class="download-item">
+            <h3>3. صوت إعادة التعيين</h3>
+            <audio controls>
+                <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+            </audio>
+            <br>
+            <a href="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" download="reset.mp3" class="button">تحميل الصوت</a>
+        </div>
+
+        <div class="note">
+            <h3>خطوات التثبيت:</h3>
+            <ol>
+                <li>قم بتحميل جميع الأصوات بالضغط على الأزرار أعلاه</li>
+                <li>انقل الملفات المحملة إلى مجلد sounds في مجلد التطبيق</li>
+                <li>تأكد من أن أسماء الملفات كالتالي:
+                    <ul>
+                        <li>click.mp3</li>
+                        <li>success.mp3</li>
+                        <li>reset.mp3</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

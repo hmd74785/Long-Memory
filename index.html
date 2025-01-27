@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Training</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            color: white;
+        }
+        iframe#background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: -1;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="background" src="background3d.html" frameborder="0"></iframe>
+    <div class="container">
+        <div class="card">
+            <div class="card-content">
+                <h1>Long Memory</h1>
+                <div class="count-selector">
+                    <select id="countLimit" class="count-select">
+                        <option value="5">عد إلى 5</option>
+                        <option value="10" selected>عد إلى 10</option>
+                        <option value="20">عد إلى 20</option>
+                    </select>
+                </div>
+                <div class="counter-container">
+                    <div class="counter-wrapper">
+                        <div class="counter" id="counter">0</div>
+                        <div class="counter-ring"></div>
+                    </div>
+                    <div class="instruction">
+                        <span class="click-text">المس</span>
+                        <span class="or">أو</span>
+                        <span class="key">اضغط</span>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                    <div class="progress-percentage" id="progress-percentage">0%</div>
+                    <div class="progress-lines">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="signature">
+            <span class="developer">By:Hamad Atti</span>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // تسجيل service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+    </script>
+</body>
+</html>

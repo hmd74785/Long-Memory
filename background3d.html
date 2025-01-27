@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خلفية ثلاثية الأبعاد</title>
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.156.1/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.156.1/examples/jsm/"
+        }
+    }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        #content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <!-- هنا يمكن إضافة محتوى الصفحة -->
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // إعداد المشهد
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000000, 0.001);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        document.body.appendChild(renderer.domElement);
+
+        // إضافة النجوم مع أحجام وألوان مختلفة
+        const starsGeometry = new THREE.BufferGeometry();
+        const starsMaterial = new THREE.PointsMaterial({
+            size: 0.5,
+            vertexColors: true,
+            transparent: true
+        });
+
+        const starsVertices = [];
+        const starsColors = [];
+        for (let i = 0; i < 15000; i++) {
+            const x = (Math.random() - 0.5) * 2000;
+            const y = (Math.random() - 0.5) * 2000;
+            const z = (Math.random() - 0.5) * 2000;
+            starsVertices.push(x, y, z);
+
+            // إضافة ألوان مختلفة للنجوم
+            const starColor = new THREE.Color();
+            const temperature = Math.random();
+            if (temperature < 0.2) {
+                starColor.setHSL(0.6, 1, 0.9); // نجوم زرقاء
+            } else if (temperature < 0.4) {
+                starColor.setHSL(0.1, 1, 0.9); // نجوم صفراء
+            } else if (temperature < 0.6) {
+                starColor.setHSL(0.05, 0.9, 0.9); // نجوم برتقالية
+            } else {
+                starColor.setHSL(0, 0, 0.9); // نجوم بيضاء
+            }
+            starsColors.push(starColor.r, starColor.g, starColor.b);
+        }
+
+        starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+        starsGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starsColors, 3));
+        const stars = new THREE.Points(starsGeometry, starsMaterial);
+        scene.add(stars);
+
+        // إضافة سديم متحرك
+        const nebulaMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float time;
+                varying vec2 vUv;
+                
+                float noise(vec2 p) {
+                    return fract(sin(dot(p.xy, vec2(12.9898,78.233))) * 43758.5453123);
+                }
+                
+                void main() {
+                    vec2 uv = vUv;
+                    float n = noise(uv * 10.0 + time * 0.1);
+                    vec3 color = vec3(0.5 + 0.5 * sin(time + uv.x), 0.2, 0.5 + 0.5 * cos(time + uv.y));
+                    gl_FragColor = vec4(color * n * 0.3, 0.1);
+                }
+            `,
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
+
+        const nebulaGeometry = new THREE.PlaneGeometry(200, 200, 1, 1);
+        const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
+        nebula.rotation.x = Math.PI / 2;
+        nebula.position.y = -20;
+        scene.add(nebula);
+
+        // تحسين الشهب
+        class ShootingStar {
+            constructor() {
+                this.geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(20 * 3); // زيادة عدد النقاط للذيل
+                this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                
+                const material = new THREE.LineBasicMaterial({
+                    color: new THREE.Color().setHSL(Math.random(), 0.7, 0.8),
+                    transparent: true,
+                    opacity: 1,
+                    blending: THREE.AdditiveBlending
+                });
+                
+                this.mesh = new THREE.Line(this.geometry, material);
+                this.reset();
+                scene.add(this.mesh);
+            }
+
+            reset() {
+                this.startPosition = new THREE.Vector3(
+                    (Math.random() - 0.5) * 200,
+                    100 + Math.random() * 50,
+                    (Math.random() - 0.5) * 200
+                );
+                this.direction = new THREE.Vector3(
+                    (Math.random() - 0.5) * 2,
+                    -1.5 - Math.random(),
+                    (Math.random() - 0.5) * 2
+                ).normalize();
+                this.speed = 2 + Math.random() * 3;
+                this.alive = true;
+                this.mesh.material.opacity = 1;
+                this.positions = [];
+                
+                for (let i = 0; i < 20; i++) {
+                    this.positions.push(this.startPosition.clone());
+                }
+                
+                this.updatePositions();
+            }
+
+            updatePositions() {
+                const positions = this.mesh.geometry.attributes.position.array;
+                for (let i = 0; i < this.positions.length; i++) {
+                    const pos = this.positions[i];
+                    positions[i * 3] = pos.x;
+                    positions[i * 3 + 1] = pos.y;
+                    positions[i * 3 + 2] = pos.z;
+                }
+                this.mesh.geometry.attributes.position.needsUpdate = true;
+            }
+
+            update() {
+                if (!this.alive) return;
+                
+                // تحديث موقع رأس الشهاب
+                this.positions[this.positions.length - 1].add(this.direction.clone().multiplyScalar(this.speed));
+                
+                // تحديث الذيل
+                for (let i = 0; i < this.positions.length - 1; i++) {
+                    this.positions[i].lerp(this.positions[i + 1], 0.9);
+                }
+                
+                this.updatePositions();
+                
+                this.mesh.material.opacity *= 0.98;
+                
+                if (this.mesh.material.opacity < 0.01 || this.positions[this.positions.length - 1].y < -50) {
+                    this.alive = false;
+                    setTimeout(() => {
+                        this.reset();
+                    }, Math.random() * 3000);
+                }
+            }
+        }
+
+        const shootingStars = Array(8).fill(null).map(() => new ShootingStar());
+
+        // إضافة الإضاءة
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        // إنشاء مكعبات الذاكرة
+        const cubes = [];
+        const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const cubeMaterial = new THREE.MeshPhongMaterial({
+            color: 0x00ff00,
+            transparent: true,
+            opacity: 0.8,
+            wireframe: false
+        });
+
+        for (let i = 0; i < 50; i++) {
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial.clone());
+            cube.position.x = Math.random() * 40 - 20;
+            cube.position.y = Math.random() * 40 - 20;
+            cube.position.z = Math.random() * 40 - 20;
+            cube.material.color.setHSL(Math.random(), 0.7, 0.5);
+            cubes.push(cube);
+            scene.add(cube);
+        }
+
+        camera.position.z = 30;
+
+        // تحديث حجم النافذة
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // حركة المكعبات
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // تحريك النجوم بنمط دوراني أكثر تعقيداً
+            stars.rotation.y += 0.0001;
+            stars.rotation.x = Math.sin(time * 0.0001) * 0.01;
+            
+            // تحديث السديم
+            nebulaMaterial.uniforms.time.value = time;
+            nebula.rotation.z += 0.0005;
+            
+            // تحديث الشهب
+            shootingStars.forEach(star => star.update());
+
+            cubes.forEach((cube, index) => {
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                cube.position.y += Math.sin(time + index) * 0.02;
+                // تغيير لون المكعبات تدريجياً
+                cube.material.color.setHSL(Math.sin(time * 0.1 + index) * 0.1 + 0.5, 0.7, 0.5);
+            });
+
+            camera.position.x = Math.sin(time * 0.0002) * 5;
+            camera.position.z = 30 + Math.cos(time * 0.0002) * 5;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
