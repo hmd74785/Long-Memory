@@ -318,10 +318,95 @@ h1 {
 .signature {
     text-align: center;
     width: 100%;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+.signature-content {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
-    padding: 10px 0;
-    font-size: clamp(0.8rem, 3vw, 1rem);
-    color: rgba(255, 255, 255, 0.7);
+    padding: 15px 25px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signature-content:hover {
+    transform: translateY(-5px) rotateX(5deg);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.signature-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 5px;
+    font-family: 'Tajawal', sans-serif;
+}
+
+.developer-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ffd700, #ff6b6b, #4834d4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    padding: 0 10px;
+}
+
+.signature-decoration {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    width: 100%;
+    justify-content: center;
+}
+
+.decoration-dot {
+    width: 4px;
+    height: 4px;
+    background: #ffd700;
+    border-radius: 50%;
+    margin: 0 5px;
+    animation: pulse 1.5s infinite alternate;
+}
+
+.decoration-line {
+    height: 2px;
+    width: 30px;
+    background: linear-gradient(90deg, transparent, #ffd700, transparent);
+    margin: 0 5px;
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    to {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .signature-content {
+        padding: 10px 20px;
+    }
+    
+    .developer-name {
+        font-size: 1rem;
+    }
+    
+    .signature-text {
+        font-size: 0.8rem;
+    }
 }
 
 /* إضافة قواعد للتجاوب مع الشاشات الصغيرة */
