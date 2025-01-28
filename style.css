@@ -18,9 +18,14 @@ body {
     width: 100%;
     max-width: 500px;
     padding: 20px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .card {
+    width: 100%;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 30px;
     backdrop-filter: blur(10px);
@@ -35,7 +40,7 @@ body {
 
 h1 {
     text-align: center;
-    font-size: 3.5rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
     margin-bottom: 2rem;
     font-family: 'Righteous', cursive;
     background: linear-gradient(
@@ -49,18 +54,7 @@ h1 {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    background-size: 300% 100%;
-    animation: titleGradient 8s ease infinite;
-    letter-spacing: 2px;
-    text-shadow: 
-        3px 3px 0px rgba(0, 0, 0, 0.2),
-        0 0 20px rgba(255, 255, 255, 0.2);
-    transform: perspective(500px) rotateX(10deg);
-    transition: transform 0.3s ease;
-}
-
-h1:hover {
-    transform: perspective(500px) rotateX(0deg) scale(1.05);
+    white-space: nowrap;
 }
 
 .counter-container {
@@ -322,39 +316,182 @@ h1:hover {
 }
 
 .signature {
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.7);
-    padding: 5px 10px;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #fff;
-    background: linear-gradient(90deg, rgba(255, 0, 150, 0.5), rgba(0, 204, 255, 0.5));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: fade 3s infinite alternate;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    padding: 10px 0;
+    font-size: clamp(0.8rem, 3vw, 1rem);
+    color: rgba(255, 255, 255, 0.7);
 }
 
-@keyframes fade {
-    from {
-        opacity: 0.5;
+/* إضافة قواعد للتجاوب مع الشاشات الصغيرة */
+@media screen and (max-width: 480px) {
+    .card-content {
+        padding: 20px;
     }
-    to {
-        opacity: 1;
+    
+    .button-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .key, .click-text {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    .count-select {
+        width: 90%;
+        max-width: 300px;
     }
 }
 
-.developer {
-    background: linear-gradient(90deg, #ff6b6b, #ffd93d);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-weight: bold;
-    font-size: 1rem;
-    letter-spacing: 0.5px;
+@media (max-width: 480px) {
+    .card-content {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .counter {
+        font-size: 4rem;
+    }
+    
+    .counter-wrapper {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .signature {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        bottom: 15px;
+        left: 15px;
+    }
+    
+    .developer {
+        font-size: 0.9rem;
+    }
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes progressPulse {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+}
+
+@keyframes borderRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes borderRotateReverse {
+    0% {
+        transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes textGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes titleGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes keyGlow {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba(108, 92, 231, 0.5);
+    }
+}
+
+@keyframes clickGlow {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba(255, 107, 107, 0.5);
+    }
+}
+
+@keyframes moveStripes {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 0;
+    }
+}
+
+.progress.progress-pulse {
+    animation: progressPulse 1.5s ease infinite;
+}
+
+@keyframes buttonPulse {
+    0% {
+        box-shadow: 0 4px 15px rgba(111, 155, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 25px rgba(111, 155, 255, 0.5);
+    }
+    100% {
+        box-shadow: 0 4px 15px rgba(111, 155, 255, 0.3);
+    }
 }
 
 .count-selector {
@@ -550,120 +687,12 @@ h1:hover {
     }
 }
 
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 100% 50%;
-    }
-}
-
-@keyframes progressPulse {
-    0% {
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
-    }
-    100% {
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-    }
-}
-
-@keyframes borderRotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes borderRotateReverse {
-    0% {
-        transform: rotate(360deg);
-    }
-    100% {
-        transform: rotate(0deg);
-    }
-}
-
-@keyframes textGradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 100% 50%;
-    }
-}
-
-@keyframes titleGradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-@keyframes keyGlow {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 4px 20px rgba(108, 92, 231, 0.5);
-    }
-}
-
-@keyframes clickGlow {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 4px 20px rgba(255, 107, 107, 0.5);
-    }
-}
-
-@keyframes moveStripes {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 20px 0;
-    }
-}
-
-.progress.progress-pulse {
-    animation: progressPulse 1.5s ease infinite;
-}
-
-@keyframes buttonPulse {
-    0% {
-        box-shadow: 0 4px 15px rgba(111, 155, 255, 0.3);
-    }
-    50% {
-        box-shadow: 0 4px 25px rgba(111, 155, 255, 0.5);
-    }
-    100% {
-        box-shadow: 0 4px 15px rgba(111, 155, 255, 0.3);
-    }
+.developer {
+    background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
 }
